@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+// 1. 定义枚举类型
+typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
+typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
+typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
+typedef enum { MALE, FEMALE } Gender;
+// 2. 定义结构体
+typedef struct {
+    int temperature;
+    int humidity;
+    int isRainy;
+} Weather;
+
+typedef struct {
+    float height;
+    float weight;
+    Gender gender;
+    SkinTone skinTone;
+    Season season;
+    Weather weather;
+    Occasion occasion;
+} UserProfile;
+// 3. 声明函数（此时为空壳）
+const char* getBodyType(float height, float weight);
+void recommendStyle(UserProfile *user);
+// 4. 主函数
+int main() {
+    printf("AI智能穿搭助手 - 启动中...\n");
+    printf("当前阶段：基础框架搭建完成，数据模型已就绪。\n");
+    return 0;
+}
