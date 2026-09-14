@@ -1,1 +1,1 @@
-# AI-Intelligent-Outfit-Recommendation-System
+# AI Intelligent Outfit Assistant
