@@ -1,0 +1,18 @@
+// 获取体型
+const char* getBodyType(float height, float weight) {
+    float bmi = weight / ((height / 100.0) * (height / 100.0));
+    if (bmi < 18.5) return "偏瘦";
+    else if (bmi < 24.0) return "标准";
+    else if (bmi < 28.0) return "微胖";
+    else return "偏胖";
+}
+// 获取季节名称
+const char* getSeasonName(Season s) {
+    switch (s) {
+        case SPRING: return "春季";
+        case SUMMER: return "夏季";
+        case AUTUMN: return "秋季";
+        case WINTER: return "冬季";
+    }
+    return "未知";
+}
