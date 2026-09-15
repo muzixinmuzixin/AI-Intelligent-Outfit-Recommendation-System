@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-// 1. 枚举定义
+
+// ================== 1. 枚举定义 ==================
 typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
 typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
 typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
 typedef enum { MALE, FEMALE } Gender;
-//  2. 结构体定义
+
+// ================== 2. 结构体定义 ==================
 typedef struct {
     int temperature;
     int humidity;
     int isRainy;
 } Weather;
+
 typedef struct {
     float height;
     float weight;
@@ -21,7 +24,8 @@ typedef struct {
     Weather weather;
     Occasion occasion;
 } UserProfile;
-// 3. 核心工具函数
+
+// ================== 3. 核心工具函数 ==================
 const char* getBodyType(float height, float weight) {
     float bmi = weight / ((height / 100.0) * (height / 100.0));
     if (bmi < 18.5) return "偏瘦";
@@ -29,6 +33,7 @@ const char* getBodyType(float height, float weight) {
     else if (bmi < 28.0) return "微胖";
     else return "偏胖";
 }
+
 void recommendColors(SkinTone skin, char *suitable, char *avoid) {
     switch (skin) {
         case LIGHT:
@@ -56,11 +61,12 @@ const char* getSeasonName(Season s) {
     return "未知";
 }
 
-// 4. 风格推荐主函数 (含夏季逻辑) 
+// ================== 4. 风格推荐主函数 (含夏季逻辑) ==================
 void recommendStyle(UserProfile *user) {
     const char *bodyType = getBodyType(user->height, user->weight);
     char suitableColors[100], avoidColors[100];
     recommendColors(user->skinTone, suitableColors, avoidColors);
+
     // 打印基础报告
     printf("\n========================================\n");
     printf("       个人穿搭分析报告\n");
@@ -68,7 +74,9 @@ void recommendStyle(UserProfile *user) {
     printf(" 身高: %.1fcm | 体重: %.1fkg | 体型: %s\n", user->height, user->weight, bodyType);
     printf(" 季节: %s | 温度: %d°C\n", getSeasonName(user->season), user->weather.temperature);
     printf("========================================\n\n");
+
     // --- 开始具体穿搭逻辑 ---
+
     // 1. 夏季逻辑
     if (user->season == SUMMER) {
         if (user->weather.temperature >= 30) {
@@ -118,11 +126,13 @@ void recommendStyle(UserProfile *user) {
     else {
         printf("【系统提示】当前季节的具体穿搭逻辑将在下一阶段更新。\n");
     }
+
     // 下雨提醒
     if (user->weather.isRainy) {
         printf("\n[天气预警] 今日有雨，请务必携带雨具并选择防水鞋履！\n");
     }
 }
+
 int main() {
     // 为了演示方便，这里直接硬编码一个夏季高温数据
     UserProfile user = {175, 65, FEMALE, LIGHT, SUMMER, {32, 60, 0}, DATE};
