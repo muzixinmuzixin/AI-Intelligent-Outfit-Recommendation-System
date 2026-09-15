@@ -1,4 +1,31 @@
-// 获取体型
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+// ================== 1. 枚举定义 ==================
+typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
+typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
+typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
+typedef enum { MALE, FEMALE } Gender;
+
+// ================== 2. 结构体定义 ==================
+typedef struct {
+    int temperature;
+    int humidity;
+    int isRainy;
+} Weather;
+
+typedef struct {
+    float height;
+    float weight;
+    Gender gender;
+    SkinTone skinTone;
+    Season season;
+    Weather weather;
+    Occasion occasion;
+} UserProfile;
+
+// ================== 3. 核心工具函数 ==================
+// 获取BMI并判断体型
 const char* getBodyType(float height, float weight) {
     float bmi = weight / ((height / 100.0) * (height / 100.0));
     if (bmi < 18.5) return "偏瘦";
@@ -6,7 +33,24 @@ const char* getBodyType(float height, float weight) {
     else if (bmi < 28.0) return "微胖";
     else return "偏胖";
 }
-// 获取季节名称
+// 根据肤色推荐颜色
+void recommendColors(SkinTone skin, char *suitable, char *avoid) {
+    switch (skin) {
+        case LIGHT:
+            strcpy(suitable, "莫兰迪色系、淡粉、浅蓝、米白、薰衣草紫");
+            strcpy(avoid, "荧光色、大面积纯黑");
+            break;
+        case MEDIUM:
+            strcpy(suitable, "驼色、酒红、墨绿、藏蓝、焦糖色");
+            strcpy(avoid, "过于鲜艳的荧光色");
+            break;
+        case DEEP:
+            strcpy(suitable, "白色、亮黄、宝蓝、正红、橙色");
+            strcpy(avoid, "暗棕色、深灰色、军绿色");
+            break;
+    }
+}
+// 辅助：获取季节名称
 const char* getSeasonName(Season s) {
     switch (s) {
         case SPRING: return "春季";
@@ -15,4 +59,24 @@ const char* getSeasonName(Season s) {
         case WINTER: return "冬季";
     }
     return "未知";
+}
+int main() {
+    printf("=== AI智能穿搭助手 (v2.0) ===\n\n");
+    // 模拟测试数据
+    UserProfile testUser;
+    testUser.height = 170.0;
+    testUser.weight = 65.0;
+    testUser.skinTone = MEDIUM;
+    testUser.season = SUMMER;
+    // 1. 测试体型计算
+    const char *bodyType = getBodyType(testUser.height, testUser.weight);
+    printf("【体型分析】身高:%.1fcm, 体重:%.1fkg -> 判定为: %s\n",
+           testUser.height, testUser.weight, bodyType);
+    // 2. 测试色彩推荐
+    char suitable[100], avoid[100];
+    recommendColors(testUser.skinTone, suitable, avoid);
+    printf("【色彩分析】(%s) 推荐: %s | 避免: %s\n",
+           getSeasonName(testUser.season), suitable, avoid);
+
+    return 0;
 }
