@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-// ================== 1. 枚举定义 ==================
+//  1. 枚举定义 
 typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
 typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
 typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
 typedef enum { MALE, FEMALE } Gender;
 
-// ================== 2. 结构体定义 ==================
+// 2. 结构体定义 
 typedef struct {
     int temperature;
     int humidity;
@@ -23,8 +23,7 @@ typedef struct {
     Weather weather;
     Occasion occasion;
 } UserProfile;
-
-// ================== 3. 核心工具函数 ==================
+//  3. 核心工具函数
 // 获取BMI并判断体型
 const char* getBodyType(float height, float weight) {
     float bmi = weight / ((height / 100.0) * (height / 100.0));
