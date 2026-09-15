@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+// 1. 枚举定义
+typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
+typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
+typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
+typedef enum { MALE, FEMALE } Gender;
+//  2. 结构体定义
+typedef struct {
+    int temperature;
+    int humidity;
+    int isRainy;
+} Weather;
+typedef struct {
+    float height;
+    float weight;
+    Gender gender;
+    SkinTone skinTone;
+    Season season;
+    Weather weather;
+    Occasion occasion;
+} UserProfile;
+// 3. 核心工具函数
+const char* getBodyType(float height, float weight) {
+    float bmi = weight / ((height / 100.0) * (height / 100.0));
+    if (bmi < 18.5) return "偏瘦";
+    else if (bmi < 24.0) return "标准";
+    else if (bmi < 28.0) return "微胖";
+    else return "偏胖";
+}
+void recommendColors(SkinTone skin, char *suitable, char *avoid) {
+    switch (skin) {
+        case LIGHT:
+            strcpy(suitable, "莫兰迪色系、淡粉、浅蓝");
+            strcpy(avoid, "荧光色");
+            break;
+        case MEDIUM:
+            strcpy(suitable, "驼色、酒红、墨绿");
+            strcpy(avoid, "过于鲜艳的荧光色");
+            break;
+        case DEEP:
+            strcpy(suitable, "白色、亮黄、宝蓝");
+            strcpy(avoid, "暗棕色、深灰色");
+            break;
+    }
+}
+
+const char* getSeasonName(Season s) {
+    switch (s) {
+        case SPRING: return "春季";
+        case SUMMER: return "夏季";
+        case AUTUMN: return "秋季";
+        case WINTER: return "冬季";
+    }
+    return "未知";
+}
+
+// 4. 风格推荐主函数 (含夏季逻辑) 
+void recommendStyle(UserProfile *user) {
+    const char *bodyType = getBodyType(user->height, user->weight);
+    char suitableColors[100], avoidColors[100];
+    recommendColors(user->skinTone, suitableColors, avoidColors);
+    // 打印基础报告
+    printf("\n========================================\n");
+    printf("       个人穿搭分析报告\n");
+    printf("========================================\n");
+    printf(" 身高: %.1fcm | 体重: %.1fkg | 体型: %s\n", user->height, user->weight, bodyType);
+    printf(" 季节: %s | 温度: %d°C\n", getSeasonName(user->season), user->weather.temperature);
+    printf("========================================\n\n");
+    // --- 开始具体穿搭逻辑 ---
+    // 1. 夏季逻辑
+    if (user->season == SUMMER) {
+        if (user->weather.temperature >= 30) {
+            printf("【高温天气，以清凉透气为主！】\n");
+
+            if (user->gender == FEMALE) {
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场通勤风] 冰丝短袖衬衫(白/浅蓝) + 高腰阔腿西装裤\n");
+                        printf("  鞋子: 尖头低跟凉鞋 | 配饰: 简约金属手表\n");
+                        break;
+                    case DATE:
+                        printf("- [甜美约会风] 方领泡泡袖上衣(淡粉/鹅黄) + A字半身裙\n");
+                        printf("  鞋子: 玛丽珍平底鞋 | 妆容: 水光肌底妆 + 蜜桃色腮红\n");
+                        break;
+                    case CASUAL:
+                        printf("- [休闲日常风] 宽松印花T恤 + 牛仔短裤/亚麻阔腿裤\n");
+                        printf("  鞋子: 帆布鞋/厚底凉鞋 | 配饰: 棒球帽\n");
+                        break;
+                    case SPORT:
+                        printf("- [运动活力风] 速干运动背心 + 高腰瑜伽裤\n");
+                        printf("  鞋子: 轻量跑鞋 | 妆容: 防水防晒 + 定妆喷雾\n");
+                        break;
+                    case FORMAL:
+                        printf("- [正式场合风] 轻薄面料连衣裙(及膝款)\n");
+                        printf("  鞋子: 细跟高跟鞋(裸色/黑色) | 配饰: 精致手拿包\n");
+                        break;
+                }
+            } else { // 男性夏季
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场商务风] 短袖Polo衫/薄款衬衫 + 修身西裤\n");
+                        printf("  鞋子: 乐福鞋/德比鞋 | 造型: 清爽发型\n");
+                        break;
+                    default:
+                        printf("- [休闲街头风] 宽松短袖T恤 + 工装短裤/直筒牛仔裤\n");
+                        printf("  鞋子: 运动凉鞋/板鞋 | 造型: 棒球帽 + 简约项链\n");
+                        break;
+                }
+            }
+        } else {
+            printf("【夏季温和天气】\n");
+            printf("- 建议穿着棉麻材质衬衫或薄T恤，搭配休闲长裤。\n");
+        }
+    }
+    // 其他季节暂时留空，等待下一阶段完善
+    else {
+        printf("【系统提示】当前季节的具体穿搭逻辑将在下一阶段更新。\n");
+    }
+    // 下雨提醒
+    if (user->weather.isRainy) {
+        printf("\n[天气预警] 今日有雨，请务必携带雨具并选择防水鞋履！\n");
+    }
+}
+int main() {
+    // 为了演示方便，这里直接硬编码一个夏季高温数据
+    UserProfile user = {175, 65, FEMALE, LIGHT, SUMMER, {32, 60, 0}, DATE};
+
+    printf("=== AI智能穿搭助手 (v4.0 - 夏季版) ===\n");
+    recommendStyle(&user);
+    return 0;
+}
