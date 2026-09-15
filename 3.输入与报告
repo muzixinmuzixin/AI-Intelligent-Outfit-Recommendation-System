@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+// 1. 枚举定义 
+typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
+typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
+typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
+typedef enum { MALE, FEMALE } Gender;
+// 2. 结构体定义 
+typedef struct {
+    int temperature;
+    int humidity;
+    int isRainy;
+} Weather;
+typedef struct {
+    float height;
+    float weight;
+    Gender gender;
+    SkinTone skinTone;
+    Season season;
+    Weather weather;
+    Occasion occasion;
+} UserProfile;
+//  3. 核心工具函数 
+const char* getBodyType(float height, float weight) {
+    float bmi = weight / ((height / 100.0) * (height / 100.0));
+    if (bmi < 18.5) return "偏瘦";
+    else if (bmi < 24.0) return "标准";
+    else if (bmi < 28.0) return "微胖";
+    else return "偏胖";
+}
+void recommendColors(SkinTone skin, char *suitable, char *avoid) {
+    switch (skin) {
+        case LIGHT:
+            strcpy(suitable, "莫兰迪色系、淡粉、浅蓝");
+            strcpy(avoid, "荧光色");
+            break;
+        case MEDIUM:
+            strcpy(suitable, "驼色、酒红、墨绿");
+            strcpy(avoid, "过于鲜艳的荧光色");
+            break;
+        case DEEP:
+            strcpy(suitable, "白色、亮黄、宝蓝");
+            strcpy(avoid, "暗棕色、深灰色");
+            break;
+    }
+}
+const char* getSeasonName(Season s) {
+    switch (s) {
+        case SPRING: return "春季";
+        case SUMMER: return "夏季";
+        case AUTUMN: return "秋季";
+        case WINTER: return "冬季";
+    }
+    return "未知";
+}
+// ================== 4. 风格推荐主函数 (框架版) ==================
+void recommendStyle(UserProfile *user) {
+    const char *bodyType = getBodyType(user->height, user->weight);
+    char suitableColors[100], avoidColors[100];
+    recommendColors(user->skinTone, suitableColors, avoidColors);
+
+    printf("\n========================================\n");
+    printf("       个人穿搭分析报告\n");
+    printf("========================================\n");
+    printf(" 身高: %.1fcm | 体重: %.1fkg | 体型: %s\n", user->height, user->weight, bodyType);
+    printf(" 季节: %s | 温度: %d°C | 湿度: %d%%\n",
+           getSeasonName(user->season), user->weather.temperature, user->weather.humidity);
+    printf(" 推荐色系: %s\n", suitableColors);
+    printf(" 避免色系: %s\n", avoidColors);
+    printf("========================================\n");
+    // 这里预留了具体穿搭建议的位置，目前为空
+    printf("\n[系统提示] 正在计算具体穿搭方案...\n");
+}
+int main() {
+    UserProfile user;
+    printf("=== AI智能穿搭助手 (v3.0) ===\n");
+    printf("请输入您的信息以生成报告：\n");
+
+    printf("1. 身高(cm): "); scanf("%f", &user.height);
+    printf("2. 体重(kg): "); scanf("%f", &user.weight);
+    printf("3. 性别(0:男 1:女): "); scanf("%d", (int*)&user.gender);
+    printf("4. 肤色(0:浅 1:中 2:深): "); scanf("%d", (int*)&user.skinTone);
+    printf("5. 季节(0:春 1:夏 2:秋 3:冬): "); scanf("%d", (int*)&user.season);
+    printf("6. 场合(0:工作 1:约会 2:休闲 3:运动 4:正式): "); scanf("%d", (int*)&user.occasion);
+    printf("7. 温度(C): "); scanf("%d", &user.weather.temperature);
+    printf("8. 湿度(%%): "); scanf("%d", &user.weather.humidity);
+    printf("9. 是否下雨(0:否 1:是): "); scanf("%d", &user.weather.isRainy);
+
+    recommendStyle(&user);
+    return 0;
+}
