@@ -1,0 +1,342 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// ================== 1. 枚举定义 ==================
+typedef enum { SPRING, SUMMER, AUTUMN, WINTER } Season;
+typedef enum { LIGHT, MEDIUM, DEEP } SkinTone;
+typedef enum { WORK, DATE, CASUAL, SPORT, FORMAL } Occasion;
+typedef enum { MALE, FEMALE } Gender;
+
+// ================== 2. 结构体定义 ==================
+typedef struct {
+    int temperature;
+    int humidity;
+    int isRainy;
+} Weather;
+
+typedef struct {
+    float height;
+    float weight;
+    Gender gender;
+    SkinTone skinTone;
+    Season season;
+    Weather weather;
+    Occasion occasion;
+} UserProfile;
+
+// ================== 3. 核心工具函数 ==================
+const char* getBodyType(float height, float weight) {
+    float bmi = weight / ((height / 100.0) * (height / 100.0));
+    if (bmi < 18.5) return "偏瘦";
+    else if (bmi < 24.0) return "标准";
+    else if (bmi < 28.0) return "微胖";
+    else return "偏胖";
+}
+
+void recommendColors(SkinTone skin, char *suitable, char *avoid) {
+    switch (skin) {
+        case LIGHT:
+            strcpy(suitable, "莫兰迪色系、淡粉、浅蓝、米白、薰衣草紫");
+            strcpy(avoid, "荧光色、大面积纯黑");
+            break;
+        case MEDIUM:
+            strcpy(suitable, "驼色、酒红、墨绿、藏蓝、焦糖色");
+            strcpy(avoid, "过于鲜艳的荧光色");
+            break;
+        case DEEP:
+            strcpy(suitable, "白色、亮黄、宝蓝、正红、橙色");
+            strcpy(avoid, "暗棕色、深灰色、军绿色");
+            break;
+    }
+}
+
+const char* getSeasonName(Season s) {
+    switch (s) {
+        case SPRING: return "春季";
+        case SUMMER: return "夏季";
+        case AUTUMN: return "秋季";
+        case WINTER: return "冬季";
+    }
+    return "未知";
+}
+
+// ================== 4. 风格推荐主函数 (全季节完整版) ==================
+void recommendStyle(UserProfile *user) {
+    const char *bodyType = getBodyType(user->height, user->weight);
+    char suitableColors[100], avoidColors[100];
+    recommendColors(user->skinTone, suitableColors, avoidColors);
+
+    // 打印基础报告
+    printf("\n========================================\n");
+    printf("       个人穿搭分析报告\n");
+    printf("========================================\n");
+    printf(" 身高: %.1fcm | 体重: %.1fkg | 体型: %s\n", user->height, user->weight, bodyType);
+    printf(" 季节: %s | 温度: %d°C | 湿度: %d%%\n",
+           getSeasonName(user->season), user->weather.temperature, user->weather.humidity);
+    printf(" 推荐色系: %s\n", suitableColors);
+    printf(" 避免色系: %s\n", avoidColors);
+    printf("========================================\n\n");
+
+    // === 完整的核心逻辑开始 ===
+
+    // ---------- 1. 夏季逻辑 ----------
+    if (user->season == SUMMER) {
+        if (user->weather.temperature >= 30) {
+            printf("【高温天气，以清凉透气为主！】\n");
+
+            if (user->gender == FEMALE) {
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场通勤风] 冰丝短袖衬衫(白/浅蓝) + 高腰阔腿西装裤\n");
+                        printf("  鞋子: 尖头低跟凉鞋 | 配饰: 简约金属手表\n");
+                        break;
+                    case DATE:
+                        printf("- [甜美约会风] 方领泡泡袖上衣(淡粉/鹅黄) + A字半身裙\n");
+                        printf("  鞋子: 玛丽珍平底鞋 | 妆容: 水光肌底妆 + 蜜桃色腮红\n");
+                        break;
+                    case CASUAL:
+                        printf("- [休闲日常风] 宽松印花T恤 + 牛仔短裤/亚麻阔腿裤\n");
+                        printf("  鞋子: 帆布鞋/厚底凉鞋 | 配饰: 棒球帽\n");
+                        break;
+                    case SPORT:
+                        printf("- [运动活力风] 速干运动背心 + 高腰瑜伽裤\n");
+                        printf("  鞋子: 轻量跑鞋 | 妆容: 防水防晒 + 定妆喷雾\n");
+                        break;
+                    case FORMAL:
+                        printf("- [正式场合风] 轻薄面料连衣裙(及膝款)\n");
+                        printf("  鞋子: 细跟高跟鞋(裸色/黑色) | 配饰: 精致手拿包\n");
+                        break;
+                }
+            } else { // 男性夏季
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场商务风] 短袖Polo衫/薄款衬衫 + 修身西裤\n");
+                        printf("  鞋子: 乐福鞋/德比鞋 | 造型: 清爽发型\n");
+                        break;
+                    case DATE:
+                        printf("- [清爽约会风] 亚麻短袖衬衫(白/浅灰) + 九分休闲裤\n");
+                        printf("  鞋子: 白色板鞋/帆布鞋 | 配饰: 简约手链\n");
+                        break;
+                    case CASUAL:
+                        printf("- [休闲街头风] 宽松短袖T恤 + 工装短裤/直筒牛仔裤\n");
+                        printf("  鞋子: 运动凉鞋/板鞋 | 配饰: 棒球帽 + 简约项链\n");
+                        break;
+                    case SPORT:
+                        printf("- [运动活力风] 速干运动T恤 + 运动短裤\n");
+                        printf("  鞋子: 轻量跑鞋 | 配饰: 运动手环\n");
+                        break;
+                    case FORMAL:
+                        printf("- [正式场合风] 薄款短袖西装套装(浅色)\n");
+                        printf("  鞋子: 牛津鞋(棕色) | 配饰: 领带夹\n");
+                        break;
+                }
+            }
+        } else {
+            printf("【夏季温和天气】\n");
+            if (user->gender == FEMALE) {
+                printf("- 建议穿着棉麻材质衬衫或薄T恤，搭配休闲长裤或半身裙。\n");
+            } else {
+                printf("- 建议穿着棉麻材质衬衫或薄T恤，搭配休闲长裤。\n");
+            }
+        }
+    }
+
+    // ---------- 2. 冬季逻辑 ----------
+    else if (user->season == WINTER) {
+        if (user->weather.temperature <= 0) {
+            printf("【严寒天气，以保暖防风为主！】\n");
+
+            if (user->gender == FEMALE) {
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场通勤风] 羊毛大衣(驼色/黑色) + 高领毛衣 + 加绒直筒裤\n");
+                        printf("  鞋子: 短靴(加绒款) | 配饰: 羊绒围巾 + 皮质手套\n");
+                        break;
+                    case DATE:
+                        printf("- [甜美约会风] 短款羽绒服(奶白/浅粉) + 针织连衣裙\n");
+                        printf("  鞋子: 雪地靴/马丁靴 | 配饰: 毛绒耳罩 + 格纹围巾\n");
+                        break;
+                    case CASUAL:
+                        printf("- [休闲日常风] 长款羽绒服 + 卫衣/毛衣 + 加绒牛仔裤\n");
+                        printf("  鞋子: 厚底雪地靴 | 配饰: 毛线帽 + 暖手宝\n");
+                        break;
+                    case SPORT:
+                        printf("- [运动活力风] 加厚运动外套 + 保暖内衣 + 加绒运动裤\n");
+                        printf("  鞋子: 防滑运动鞋 | 配饰: 运动手套 + 护耳帽\n");
+                        break;
+                    case FORMAL:
+                        printf("- [正式场合风] 双面呢大衣(及膝) + 高领羊绒衫 + 毛呢半裙\n");
+                        printf("  鞋子: 高跟短靴 | 配饰: 精致胸针 + 羊绒披肩\n");
+                        break;
+                }
+            } else { // 男性冬季
+                switch (user->occasion) {
+                    case WORK:
+                        printf("- [职场商务风] 中长款羊毛大衣 + 西装三件套 + 羊绒围巾\n");
+                        printf("  鞋子: 切尔西靴/德比鞋(加绒) | 配饰: 皮质手套\n");
+                        break;
+                    case DATE:
+                        printf("- [暖男约会风] 短款羽绒服(黑色/藏蓝) + 圆领毛衣 + 休闲裤\n");
+                        printf("  鞋子: 马丁靴/沙漠靴 | 配饰: 格纹围巾\n");
+                        break;
+                    case CASUAL:
+                        printf("- [休闲日常风] 加厚连帽羽绒服 + 卫衣 + 工装裤\n");
+                        printf("  鞋子: 高帮运动鞋/雪地靴 | 配饰: 毛线帽\n");
+                        break;
+                    case SPORT:
+                        printf("- [运动活力风] 防风运动夹克 + 保暖内衣 + 加绒运动裤\n");
+                        printf("  鞋子: 防滑越野跑鞋 | 配饰: 运动手套 + 脖套\n");
+                        break;
+                    case FORMAL:
+                        printf("- [正式场合风] 双排扣大衣 + 西装套装 + 真丝领带\n");
+                        printf("  鞋子: 牛津鞋(黑色) | 配饰: 口袋巾 + 袖扣\n");
+                        break;
+                }
+            }
+        } else {
+            printf("【冬季温和天气】\n");
+            if (user->gender == FEMALE) {
+                printf("- 建议穿着轻薄羽绒服或毛呢外套，内搭针织衫，搭配保暖裤装。\n");
+            } else {
+                printf("- 建议穿着轻薄羽绒服或夹克外套，内搭毛衣，搭配休闲长裤。\n");
+            }
+        }
+    }
+
+    // ---------- 3. 春季逻辑 ----------
+    else if (user->season == SPRING) {
+        printf("【春季天气，以轻薄叠穿为主！】\n");
+
+        if (user->gender == FEMALE) {
+            switch (user->occasion) {
+                case WORK:
+                    printf("- [职场通勤风] 薄款西装外套 + 真丝衬衫 + 高腰九分裤\n");
+                    printf("  鞋子: 尖头平底鞋/低跟鞋 | 配饰: 简约耳钉 + 丝巾\n");
+                    break;
+                case DATE:
+                    printf("- [甜美约会风] 碎花连衣裙 + 针织开衫\n");
+                    printf("  鞋子: 玛丽珍鞋/芭蕾平底鞋 | 配饰: 珍珠耳环 + 草编包\n");
+                    break;
+                case CASUAL:
+                    printf("- [休闲日常风] 牛仔外套/风衣 + 白T恤 + 直筒牛仔裤\n");
+                    printf("  鞋子: 帆布鞋/小白鞋 | 配饰: 棒球帽 + 帆布包\n");
+                    break;
+                case SPORT:
+                    printf("- [运动活力风] 轻薄运动外套 + 速干T恤 + 运动裤\n");
+                    printf("  鞋子: 跑步鞋 | 配饰: 运动手环\n");
+                    break;
+                case FORMAL:
+                    printf("- [正式场合风] 修身西装套装(浅灰/米白) + 丝绸衬衫\n");
+                    printf("  鞋子: 细跟高跟鞋 | 配饰: 精致手提包\n");
+                    break;
+            }
+        } else { // 男性春季
+            switch (user->occasion) {
+                case WORK:
+                    printf("- [职场商务风] 薄款休闲西装 + 衬衫(浅蓝/白) + 修身西裤\n");
+                    printf("  鞋子: 乐福鞋/德比鞋 | 配饰: 简约手表\n");
+                    break;
+                case DATE:
+                    printf("- [清爽约会风] 针织开衫 + 圆领T恤 + 卡其裤\n");
+                    printf("  鞋子: 白色板鞋 | 配饰: 简约手链\n");
+                    break;
+                case CASUAL:
+                    printf("- [休闲日常风] 牛仔夹克/工装外套 + T恤 + 直筒牛仔裤\n");
+                    printf("  鞋子: 帆布鞋/复古跑鞋 | 配饰: 棒球帽\n");
+                    break;
+                case SPORT:
+                    printf("- [运动活力风] 轻薄防风外套 + 速干T恤 + 运动短裤\n");
+                    printf("  鞋子: 轻量跑鞋 | 配饰: 运动手环\n");
+                    break;
+                case FORMAL:
+                    printf("- [正式场合风] 经典西装三件套(藏蓝/深灰) + 真丝领带\n");
+                    printf("  鞋子: 牛津鞋 | 配饰: 口袋巾 + 袖扣\n");
+                    break;
+            }
+        }
+    }
+
+    // ---------- 4. 秋季逻辑 ----------
+    else if (user->season == AUTUMN) {
+        printf("【秋季天气，以层次叠穿为主！】\n");
+
+        if (user->gender == FEMALE) {
+            switch (user->occasion) {
+                case WORK:
+                    printf("- [职场通勤风] 长款风衣(卡其/焦糖) + 高领薄毛衣 + 烟管裤\n");
+                    printf("  鞋子: 切尔西短靴 | 配饰: 皮质腰带 + 托特包\n");
+                    break;
+                case DATE:
+                    printf("- [温柔约会风] 针织连衣裙 + 短款皮衣/牛仔外套\n");
+                    printf("  鞋子: 踝靴/乐福鞋 | 配饰: 金属耳环 + 链条包\n");
+                    break;
+                case CASUAL:
+                    printf("- [休闲日常风] 卫衣/毛衣 + 灯芯绒裤/阔腿裤\n");
+                    printf("  鞋子: 马丁靴/厚底乐福鞋 | 配饰: 贝雷帽 + 帆布包\n");
+                    break;
+                case SPORT:
+                    printf("- [运动活力风] 薄款运动夹克 + 长袖T恤 + 运动裤\n");
+                    printf("  鞋子: 跑步鞋 | 配饰: 运动腰包\n");
+                    break;
+                case FORMAL:
+                    printf("- [正式场合风] 毛呢大衣 + 丝质衬衫 + 铅笔裙\n");
+                    printf("  鞋子: 高跟短靴 | 配饰: 珍珠项链 + 手拿包\n");
+                    break;
+            }
+        } else { // 男性秋季
+            switch (user->occasion) {
+                case WORK:
+                    printf("- [职场商务风] 长款风衣/薄款大衣 + 衬衫 + 修身西裤\n");
+                    printf("  鞋子: 德比鞋/布洛克鞋 | 配饰: 皮质公文包\n");
+                    break;
+                case DATE:
+                    printf("- [质感约会风] 针织毛衣 + 衬衫(叠穿) + 灯芯绒裤\n");
+                    printf("  鞋子: 沙漠靴/乐福鞋 | 配饰: 简约手表\n");
+                    break;
+                case CASUAL:
+                    printf("- [休闲日常风] 工装夹克/牛仔外套 + 卫衣 + 工装裤\n");
+                    printf("  鞋子: 马丁靴/复古跑鞋 | 配饰: 渔夫帽\n");
+                    break;
+                case SPORT:
+                    printf("- [运动活力风] 防风运动外套 + 长袖速干衣 + 运动裤\n");
+                    printf("  鞋子: 越野跑鞋 | 配饰: 运动腰包\n");
+                    break;
+                case FORMAL:
+                    printf("- [正式场合风] 格纹西装套装 + 衬衫 + 针织领带\n");
+                    printf("  鞋子: 牛津鞋(深棕) | 配饰: 口袋巾 + 袖扣\n");
+                    break;
+            }
+        }
+    }
+
+    // ---------- 下雨提醒 ----------
+    if (user->weather.isRainy) {
+        printf("\n[天气预警] 今日有雨，请务必携带雨具并选择防水鞋履！\n");
+        printf("  建议: 深色鞋款优先(防溅水)，避免浅色帆布鞋/麂皮鞋。\n");
+    }
+
+    printf("\n========================================\n");
+    printf(" 报告生成完毕，祝您出行愉快！\n");
+    printf("========================================\n");
+}
+
+// ================== 5. 主函数 ==================
+int main() {
+    UserProfile user;
+    printf("=== AI智能穿搭助手 (v5.0 - 全季节完整版) ===\n");
+    printf("请输入您的信息以生成报告：\n\n");
+
+    printf("1. 身高(cm): "); scanf("%f", &user.height);
+    printf("2. 体重(kg): "); scanf("%f", &user.weight);
+    printf("3. 性别(0:男 1:女): "); scanf("%d", (int*)&user.gender);
+    printf("4. 肤色(0:浅 1:中 2:深): "); scanf("%d", (int*)&user.skinTone);
+    printf("5. 季节(0:春 1:夏 2:秋 3:冬): "); scanf("%d", (int*)&user.season);
+    printf("6. 场合(0:工作 1:约会 2:休闲 3:运动 4:正式): "); scanf("%d", (int*)&user.occasion);
+    printf("7. 温度(C): "); scanf("%d", &user.weather.temperature);
+    printf("8. 湿度(%%): "); scanf("%d", &user.weather.humidity);
+    printf("9. 是否下雨(0:否 1:是): "); scanf("%d", &user.weather.isRainy);
+
+    recommendStyle(&user);
+    return 0;
+}
